@@ -485,7 +485,7 @@ class DestinationCard extends StatelessWidget {
 
 บันทึกรูปผลการทดลอง
 
-<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/9ceb092b-25f6-4e3a-893e-3c40cdcc950e" />
+<img width="1366" height="768" alt="Screenshot (605)" src="https://github.com/user-attachments/assets/ba884449-f3da-4da6-b4b3-e6229a6e2e48" />
 
 ```image
 // lib/widgets/destination_card.dart
