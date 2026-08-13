@@ -825,9 +825,167 @@ class _ExploreScreenState extends State<ExploreScreen> {
 > 3. สังเกตว่าค่าทั้งสองตัวเท่ากันหรือไม่ แล้วเขียนสรุป 2-3 บรรทัดเป็น Comment ในโค้ดว่า `MediaQuery.of(context).size.width` (ความกว้างของทั้งหน้าจอ) กับ `LayoutBuilder` `constraints.maxWidth` (ความกว้างที่ Widget นั้น ๆ ได้รับจาก Parent) ต่างกันอย่างไร และควรเลือกใช้ตัวไหนเมื่อไหร่
 
 บันทึกรูปผลการทดลอง
-```image
-บันทึกรูปโค้ด และรูปผลการทดลองที่นี่ (กรณีที่ยังไม่สามารถรันได้ ให้ทดลองจนถึงขั้นตอนที่สามารถ capture รูปได้และบันทึกรูปไว้ในส่วนนี้)
-```
+
+<img width="1366" height="768" alt="Screenshot (606)" src="https://github.com/user-attachments/assets/beda8dda-b2b6-46a2-92ee-817b1558f943" />
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../models/destination.dart';
+import '../widgets/destination_card.dart';
+
+class ExploreScreen extends StatefulWidget {
+  const ExploreScreen({super.key});
+
+  @override
+  State<ExploreScreen> createState() => _ExploreScreenState();
+}
+
+class _ExploreScreenState extends State<ExploreScreen> {
+  String _searchQuery = '';
+
+  List<Destination> get _filteredDestinations {
+    if (_searchQuery.isEmpty) return sampleDestinations;
+    return sampleDestinations
+        .where(
+          (d) =>
+              d.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+              d.country.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+              d.tags.any(
+                (t) => t.toLowerCase().contains(_searchQuery.toLowerCase()),
+              ),
+        )
+        .toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('สำรวจ'),
+        centerTitle: false,
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+            child: TextField(
+              onChanged: (value) => setState(() => _searchQuery = value),
+              decoration: InputDecoration(
+                hintText: 'ค้นหา Destination...',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+                fillColor: Colors.grey.shade100,
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Expanded(
+            child: _filteredDestinations.isEmpty
+                ? _buildEmptyState()
+                : _buildGrid(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGrid() {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        print('Screen Width (MediaQuery): $screenWidth');
+        print('Available Width (LayoutBuilder): ${constraints.maxWidth}');
+
+        int crossAxisCount;
+        if (constraints.maxWidth >= 1200) {
+          crossAxisCount = 5;
+        } else if (constraints.maxWidth >= 840) {
+          crossAxisCount = 4;
+        } else if (constraints.maxWidth >= 600) {
+          crossAxisCount = 3;
+        } else {
+          crossAxisCount = 2;
+        }
+
+        return Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.amber.shade100,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                'MediaQuery Width: ${screenWidth.toStringAsFixed(1)} | '
+                'LayoutBuilder MaxWidth: ${constraints.maxWidth.toStringAsFixed(1)}\n'
+                'Cols: $crossAxisCount',
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Expanded(
+              child: GridView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: 0.72,
+                ),
+                itemCount: _filteredDestinations.length,
+                itemBuilder: (context, index) {
+                  final destination = _filteredDestinations[index];
+                  return DestinationCard(
+                    destination: destination,
+                    onTap: () {
+                      context.pushNamed(
+                        'destination-detail',
+                        pathParameters: {'id': destination.id},
+                        extra: destination,
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.search_off, size: 64, color: Colors.grey.shade400),
+          const SizedBox(height: 16),
+          Text(
+            'ไม่พบ Destination ที่ค้นหา',
+            style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '"$_searchQuery"',
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}```
 
 #### ขั้นตอนที่ 4.2 — Destination Detail Screen
 
