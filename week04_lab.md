@@ -669,8 +669,7 @@ class DestinationCard extends StatelessWidget {
   }
 }
 ```
-<img width="1366" height="768" alt="Screenshot (605)" src="https://github.com/user-attachments/assets/ba884449-f3da-4da6-b4b3-e6229a6e2e48" />
-
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/ee08c2b4-a658-46fb-bd28-10c0bf7d06f6" />
 ---
 
 ### การทดลองที่ 4 — สร้าง Screens
@@ -2220,7 +2219,7 @@ flutter devices
 | 3 | พิมพ์ค้นหา "โตเกียว" | ผลการค้นหาเหลือเฉพาะโตเกียว | ✔ |
 | 4 | กดที่ Card ใด ๆ | เปิด Detail Screen พร้อมข้อมูลถูกต้อง | ✔ |
 | 5 | กด Back บน Detail | กลับมา Explore Screen | ✔ |
-| 6 | กด Tab "หน้าหลัก" | กลับหน้าหลัก โดยที่ Stack ใน Explore ยังไม่หาย | |
+| 6 | กด Tab "หน้าหลัก" | กลับหน้าหลัก โดยที่ Stack ใน Explore ยังไม่หาย | ✔ |
 | 7 | กดหัวใจบน Detail | Snackbar แจ้งบันทึกสำเร็จ | ✔ |
 | 8 | กด "จองเลย" บน Detail | Dialog แสดงการจองสำเร็จ | ✔ |
 | 9 | กด "กลับหน้าหลัก" ใน Dialog | Navigate กลับ Home | ✔ |
@@ -2323,9 +2322,11 @@ GoRoute(
 > 💡 **หลีกเลี่ยงการขอโค้ดทั้งไฟล์จาก AI** ให้ลองเขียนเองก่อน ถ้าติดจริง ๆ ให้ถามเป็นจุด ๆ ไป (เช่น "ทำไม setState ใน Widget อื่นไม่ทำให้ Saved Screen รีเฟรช") จะได้เรียนรู้มากกว่าการคัดลอกมาทั้งหมด
 
 บันทึกรูปผลการทดลอง
-```image
-บันทึกรูปโค้ด และรูปผลการทดลองที่นี่ 
-```
+
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/288d6996-5f91-44c2-832a-2096753ee6f8" />
+
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/62dffb16-e68b-4df4-b5df-b49b35805cff" />
+
 ---
 
 ## 📝 คำถามท้ายใบงาน
@@ -2334,23 +2335,23 @@ GoRoute(
 
 1. `LayoutBuilder` ต่างกับ `MediaQuery` อย่างไร? มีหลักการเลือกใช้แต่ละแบบในสถานการณ์ใด?
 ```text
-
+MediaQuery ดึงขนาดหน้าจอทั้งหมดของอุปกรณ์ (Global) เหมาะใช้จัดโครงสร้างหลักของทั้งหน้าจอ เช่น การแยก Layout ระหว่างมือถือกับแท็บเล็ต ส่วน LayoutBuilder ดึงเฉพาะพื้นที่ที่ Parent ยอมให้ child ขยายได้ (Local) เหมาะใช้จัด Layout ย่อยภายใน Component เช่น การคำนวณจำนวนคอลัมน์ของ GridView ไม่ให้ล้นกรอบ
 ```
 2. ทำไม Go Router ถึงใช้ `StatefulShellRoute` แทน `ShellRoute` ธรรมดา? ผลต่างเรื่อง State Management คืออะไร?
 ```text
-
+StatefulShellRoute ช่วยรักษา State และตำแหน่งการทำงานของแต่ละแท็บเอาไว้เมื่อสลับหน้าไปมา ต่างจาก ShellRoute แบบธรรมดาที่จะทำลายและสร้าง Widget ใหม่ทุกครั้ง ทำให้ข้อมูลที่พิมพ์ค้างไว้หรือตำแหน่งการ Scroll หายไป
 ```
 3. ในโค้ด `DestinationCard` เหตุใดจึงใช้ `Expanded` ครอบ `Text` ชื่อ Destination ? จะเกิดอะไรขึ้นถ้าลบออก?
 ```text
-
+ใช้เพื่อจำกัดพื้นที่ข้อความให้อยู่ในขอบเขตที่เหลืออยู่ของ Row หากลบออก เมื่อเจอชื่อสถานที่ยาวเกินไป ข้อความจะขยายล้นจอจนเกิดข้อผิดพลาด RenderFlex overflowed หรือขอบจอแตกสีเหลืองสลับดำ
 ```
 4. การส่งข้อมูลผ่าน `extra` ของ Go Router มีข้อจำกัดอะไรกรณี Deep Link / Web Refresh? และแก้ปัญหานี้ได้อย่างไร?
 ```text
-
+พารามิเตอร์ extra เก็บข้อมูลใน Memory ชั่วคราว เมื่อผู้ใช้กด Refresh หน้าเว็บหรือเข้าผ่าน Deep Link ค่าจะกลายเป็น null ทันที แก้ไขได้โดยการส่งเฉพาะ ID ผ่าน Path Parameter แทน แล้วเขียน Logic นำ ID นั้นไปค้นหาข้อมูลจาก Data Source มาแสดงผลใหม่
 ```
 5. วาด Navigation Hierarchy ของแอปนี้ (สามารถวาดบนกระดาษแล้วถ่ายรูปส่งได้)
 ```text
-
+GoRouter เป็นตัวจัดการเส้นทางหลัก ครอบด้วย StatefulShellRoute สำหรับ Bottom Navigation Bar ซึ่งแบ่งเป็น 5 แท็บ ได้แก่ Home, Explore, Saved, Profile และ About โดยในแท็บ Explore จะมี Sub-route หน้า Destination Detail ซ้อนอยู่ภายในอีกชั้นหนึ่ง
 ```
 ---
 
